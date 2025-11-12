@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-nodejs
+  namespace: backend #flaq rotulo espeficado da tag!
+spec:
+  replicas: 10
+  selector:
+    matchLabels: #flag container indentaçao!
+      app: app-backend
+  template:
+    metadata:
+      labels:
+        app: app-backend
+    spec:
+      nodeSelector: #flaq nodes espeficado!
+       kubernetes.io/hostname: minikube-m03
+      containers:
+      - name: k8s-nodejs
+        image: brunosantos88/desafio-app:1
+        resources: ##especificando processsamento!
+          requests:
+            memory: "10Mi" 
+            cpu: "5m"
+          limits:
+            memory: "100Mi"
+            cpu: "15m"
+        ports:
+        - containerPort: 5000
+---
+#Serviço aonde rodando!
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP

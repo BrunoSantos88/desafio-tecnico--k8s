@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-pod
+  namespace: bancodados
+spec:
+  nodeSelector:               # flag para selecionar node específico
+    kubernetes.io/hostname: minikube-m03
+  containers:
+  - name: postgres
+    image: postgres:latest
+    resources:
+      requests:
+        memory: "10Mi"
+        cpu: "5m"
+      limits:
+        memory: "100Mi"
+        cpu: "15m"
+    ports:
+      - containerPort: 5432    # porta padrão do Postgres
+    volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: postgress-pvc
+  volumes:
+    - name: postgress-pvc
+      persistentVolumeClaim:
+        claimName: postgress
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres  
+  ports:
+  - protocol: TCP
+    port: 5432          
+    targetPort: 5432   
+  type: ClusterIP      
