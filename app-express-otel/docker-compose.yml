@@ -4,8 +4,16 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
+    depends_on:
+      - db
     networks:
       - app-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: meu_banco
+      DB_HOST: db
+      DB_PORT: 5432
 
   frontend:
     build: ./frontend
@@ -16,6 +24,24 @@ services:
     networks:
       - app-network
 
+  db:
+    build: ./db
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: meu_banco
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  pgdata:

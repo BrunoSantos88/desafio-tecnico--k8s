@@ -1,46 +1,86 @@
 const express = require('express');
 const cors = require('cors');
-const client = require('prom-client');
+const { Pool } = require('pg');
 
+
+///portas express
 const app = express();
+const port = 5000
 
-const allowedOrigins = [
-  'http://localhost'
-];
+const allowedOrigins = ['http://localhost']
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    console.log('Origin da requisição:', origin);
+  origin: function(origin, callback) {
+    // Permite requisições sem origin (ex: Postman) ou origem permitida
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('CORS não permitido'));
+      callback(new Error('Origin not allowed by CORS'));
     }
   },
   optionsSuccessStatus: 200
 };
+app.use(express.json());
 
 app.use(cors(corsOptions));
-
-// Rota para saudacoes
-app.get('/api/saudacoes', (req, res) => {
-  res.json({ mensagem: 'Olá do backend!' });
+const pool = new Pool({
+  user: 'postgres',
+  host: 'db',
+  database: 'meu_banco',
+  password: 'postgres',
+  port: 5432,
 });
 
-// Middleware de tratamento de erros
-app.use((err, req, res, next) => {
-  console.error(err.message);
 
-  if (err.message === 'CORS não permitido') {
-    return res.status(403).json({ error: err.message });
+const dadosFrio = {
+  local: 'Alasca',
+  pais: 'Estados Unidos',
+  temperatura: -10,
+  horario: 'UTC-9'
+};
+
+const dadosQuente = {
+  local: 'Região Amazônica',
+  pais: 'Brasil',
+  temperatura: 40,
+  horario: 'UTC-3'
+};
+
+// Rota para dados frio
+app.get('/api/temperatura/frio', async (req, res) => {
+  await incrementarContador('frio');
+  res.json(dadosFrio);
+});
+
+// Rota para dados quente
+app.get('/api/temperatura/quente', async (req, res) => {
+  await incrementarContador('quente');
+  res.json(dadosQuente);
+});
+
+
+// Função para incrementar contador no banco
+async function incrementarContador(tipo) {
+  try {
+    await pool.query(
+      'UPDATE contador_selecoes SET contagem = contagem + 1 WHERE tipo = $1',
+      [tipo]
+    );
+  } catch (error) {
+    console.error('Erro ao atualizar contador:', error);
   }
+}
 
-  res.status(err.status || 500).json({
-    error: err.message || 'Erro interno do servidor'
-  });
+// Endpoint para consultar as contagens
+app.get('/api/temperatura/contador', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT tipo, contagem FROM contador_selecoes');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar contagem' });
+  }
 });
 
-// Inicia servidor na porta 5000
-app.listen(5000, () => {
-  console.log('Servidor rodando na porta 5000');
+app.listen(port, () => {
+  console.log(`API rodando em http://localhost:${port}`);
 });
