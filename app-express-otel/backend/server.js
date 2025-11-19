@@ -7,7 +7,7 @@ const { Pool } = require('pg');
 const app = express();
 const port = 5000
 
-const allowedOrigins = ['http://localhost']
+const allowedOrigins = ['*']
 
 const corsOptions = {
   origin: function(origin, callback) {
