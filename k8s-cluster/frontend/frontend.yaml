@@ -1,22 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: frontend
+  namespace: app-desafios
 spec:
   selector:
     matchLabels:
-      app: myapp
+      app: frontend
   template:
     metadata:
       labels:
-        app: myapp
+        app: frontend
     spec:
-      nodeSelector:
-         kubernetes.io/hostname: minikube-m07
       containers:
-      - name: myapp
-        image: brunosantos88/otel-app-frontend:v3
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+      - name: frontend
+        image: docker.io/brunosantos88/otel-app-frontend:10

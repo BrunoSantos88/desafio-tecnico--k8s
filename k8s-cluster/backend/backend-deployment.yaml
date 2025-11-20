@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: app-backend
 spec:
-  replicas: 10
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -13,8 +13,6 @@ spec:
       labels:
         app: backend
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: minikube-m04
       containers:
       - name: backend
-        image: brunosantos88/otel-app-backend:v1
+        image: docker.io/brunosantos88/otel-app-backend:10
