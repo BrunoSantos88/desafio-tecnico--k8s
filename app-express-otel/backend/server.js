@@ -1,10 +1,23 @@
 const express = require('express');
 const cors = require('cors');
 
-const app = express(); 
-const port = 5000;
+///portas express
+const app = express();
+const port = 5000
 
-app.use(cors({ origin: '*' })); 
+const allowedOrigins = ['*']
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    // Permite requisições sem origin (ex: Postman) ou origem permitida
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
 app.use(express.json());
 
 const dadosFrio = {
