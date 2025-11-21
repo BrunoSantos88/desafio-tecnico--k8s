@@ -1,19 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-frontend-ingress
-  namespace: frontend
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: frontend-ingress
+  namespace: app-desafio
 spec:
   rules:
-  - host: example.local  # substitua pelo seu domínio ou IP conforme ambiente
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx-frontend
-            port:
-              number: 80
+    - host: frontend.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 30001

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: app-desafios
+  namespace: app-desafio
 spec:
   selector:
     matchLabels:
@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: docker.io/brunosantos88/otel-app-frontend:10
+        image: brunosantos88/otel-app-frontend:v2
