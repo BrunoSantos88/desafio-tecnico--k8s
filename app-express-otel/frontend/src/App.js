@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 
-const API_BASE_URL = 'http://localhost:5000';
+// Definição da variável com URLs da API
+const backendIPs = [
+  'http://192.168.49.2:30001', // NodePort
+  'http://backend.app-desafio.svc.cluster.local:5000' //ENDPONT MINIKUBE
+];
 
 function App() {
   const [dadosFrio, setDadosFrio] = useState(null);
   const [dadosQuente, setDadosQuente] = useState(null);
 
+  const fetchFromBackends = async (path) => {
+    for (const baseUrl of backendIPs) {
+      try {
+        const res = await fetch(`${baseUrl}${path}`);
+        if (res.ok) {
+          const data = await res.json();
+          return data;
+        }
+      } catch (error) {
+        console.warn(`Erro ao acessar ${baseUrl}`, error);
+      }
+    }
+    throw new Error('Falha ao acessar todos os backends');
+  };
+
   const buscarFrio = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/temperatura/frio`);
-      const data = await res.json();
+      const data = await fetchFromBackends('/api/temperatura/frio');
       setDadosFrio(data);
-      setDadosQuente(null); // opcional: limpar outro dado ao buscar
+      setDadosQuente(null);
     } catch {
       alert('Erro ao buscar dados frio');
     }
@@ -19,10 +37,9 @@ function App() {
 
   const buscarQuente = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/temperatura/quente`);
-      const data = await res.json();
+      const data = await fetchFromBackends('/api/temperatura/quente');
       setDadosQuente(data);
-      setDadosFrio(null); // opcional: limpar outro dado ao buscar
+      setDadosFrio(null);
     } catch {
       alert('Erro ao buscar dados quente');
     }
@@ -36,7 +53,6 @@ function App() {
         Frio
       </button>
       <button onClick={buscarQuente}>Quente</button>
-      
 
       {dadosFrio && (
         <div style={{ marginTop: '2rem', border: '1px solid #ddd', padding: '1rem', borderRadius: '5px' }}>

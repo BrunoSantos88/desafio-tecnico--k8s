@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/ubuntu1804"
+
+  # Configura uma rede bridge (placa física eth0)
+  config.vm.network "public_network", bridge: "eth0"
+
+  # Encaminhamento das portas do K3s do guest (VM) para o host
+  config.vm.network "forwarded_port", guest: 6443, host: 6443, auto_correct: true  # API Server Kubernetes
+  config.vm.network "forwarded_port", guest: 10250, host: 10250, auto_correct: true # Kubelet
+  config.vm.network "forwarded_port", guest: 8472, host: 8472, protocol: "udp", auto_correct: true # VXLAN (UDP)
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true   # Ingress HTTP
+  config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true  # Ingress HTTPS
+  config.vm.network "forwarded_port", guest: 22, host: 2222, auto_correct: true   # SSH para VM
+
+  config.vm.provider "libvirt" do |libvirt|
+    libvirt.memory = 4098
+    libvirt.cpus = 2
+  end
+end
