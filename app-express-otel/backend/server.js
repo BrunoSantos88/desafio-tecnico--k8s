@@ -1,32 +1,42 @@
 const express = require('express');
-///portas express
 const app = express();
-const port = 5000
+const port = 5000;
 
-app.use(express.json());
+app.use(express.json())
 
-const dadosFrio = {
+// Dados
+let dadosFrio = {
   local: 'Alasca',
   pais: 'Estados Unidos',
   temperatura: -10,
   horario: 'UTC-9',
 };
 
-const dadosQuente = {
+let dadosQuente = {
   local: 'Região Amazônica',
   pais: 'Brasil',
   temperatura: 40,
   horario: 'UTC-3',
 };
 
-// Rota para dados frio
+//GET
 app.get('/api/temperatura/frio', (req, res) => {
   res.json(dadosFrio);
 });
 
-// Rota para dados quente
 app.get('/api/temperatura/quente', (req, res) => {
   res.json(dadosQuente);
+});
+
+//POST
+app.post('/api/temperatura/frio', (req, res) => {
+  dadosFrio = req.body;
+  res.status(201).json({ message: 'Dados frio atualizados', dados: dadosFrio });
+});
+
+app.post('/api/temperatura/quente', (req, res) => {
+  dadosQuente = req.body;
+  res.status(201).json({ message: 'Dados quente atualizados', dados: dadosQuente });
 });
 
 app.listen(port, () => {

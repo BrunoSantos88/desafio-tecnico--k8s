@@ -1,47 +1,35 @@
-version: "3"
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-    networks:
-      - app-network
+  postgres:
+    image: ./db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: meu_banco
-      DB_HOST: db
-      DB_PORT: 5432
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - app-network
-
-  db:
-    build: ./db
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: meu_banco
+      POSTGRES_DB: db
+      POSTGRES_USER: postgress
+      POSTGRES_PASSWORD: postgress
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: app-backend
+    depends_on:
+      - postgres
+    environment:
+      DB_USER: postgress
+      DB_PASSWORD: postgress
+      DB_HOST: db
+      DB_NAME: db
+      DB_PORT: 5432
+    ports:
+      - "5000:5000"
     networks:
       - app-network
+
+volumes:
+  pgdata:
 
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  pgdata:
