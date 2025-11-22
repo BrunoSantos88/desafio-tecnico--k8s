@@ -1,24 +1,13 @@
+#///HD EXTERNO ---N LOGICA
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgress-pvc
+  name: postgres-pv-claim
+  namespace: app-desafio
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: standard
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nginx-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
+      storage: 1Gi
   storageClassName: standard

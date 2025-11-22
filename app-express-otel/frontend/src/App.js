@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-const API_BASE_URL = 'http://localhost:5000';
-
 function App() {
   const [dadosFrio, setDadosFrio] = useState(null);
   const [dadosQuente, setDadosQuente] = useState(null);
@@ -11,7 +9,7 @@ function App() {
       const res = await fetch(`http://localhost:5000/api/temperatura/frio`);
       const data = await res.json();
       setDadosFrio(data);
-      setDadosQuente(null); 
+      setDadosQuente(null);
     } catch {
       alert('Erro ao buscar dados frio');
     }
@@ -22,7 +20,7 @@ function App() {
       const res = await fetch(`http://localhost:5000/api/temperatura/quente`);
       const data = await res.json();
       setDadosQuente(data);
-      setDadosFrio(null); 
+      setDadosFrio(null);
     } catch {
       alert('Erro ao buscar dados quente');
     }
@@ -36,7 +34,6 @@ function App() {
         Frio
       </button>
       <button onClick={buscarQuente}>Quente</button>
-      
 
       {dadosFrio && (
         <div style={{ marginTop: '2rem', border: '1px solid #ddd', padding: '1rem', borderRadius: '5px' }}>
@@ -60,4 +57,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

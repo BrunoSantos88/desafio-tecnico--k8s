@@ -13,4 +13,5 @@ minikube start
  "no meu caso"
 ```
 
-minikube start --driver=podman --force --nodes=2
+sudo minikube start --force
+sudo minikube delete --all --purge

@@ -1,44 +1,46 @@
 const express = require('express');
+const { Pool } = require('pg');
 const app = express();
 const port = 5000;
 
-app.use(express.json())
+app.use(express.json());
 
-// Dados
-let dadosFrio = {
-  local: 'Alasca',
-  pais: 'Estados Unidos',
-  temperatura: -10,
-  horario: 'UTC-9',
-};
-
-let dadosQuente = {
-  local: 'Região Amazônica',
-  pais: 'Brasil',
-  temperatura: 40,
-  horario: 'UTC-3',
-};
-
-//GET
-app.get('/api/temperatura/frio', (req, res) => {
-  res.json(dadosFrio);
+//Conexao com postgress
+const pool = new Pool({
+  user: "postgres",
+  host: "db",
+  database: "locahost",
+  password: "postgres",
+  port: "5432",
 });
 
-app.get('/api/temperatura/quente', (req, res) => {
-  res.json(dadosQuente);
+// METODO GET
+app.get('/api/temperatura/frio', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT local, pais, temperatura, horario FROM temperatura WHERE tipo = $1', ['frio']);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Dados frio não encontrados' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao buscar dados frio:', error);
+    res.status(500).json({ error: 'Erro ao buscar dados frio' });
+  }
 });
 
-//POST
-app.post('/api/temperatura/frio', (req, res) => {
-  dadosFrio = req.body;
-  res.status(201).json({ message: 'Dados frio atualizados', dados: dadosFrio });
-});
 
-app.post('/api/temperatura/quente', (req, res) => {
-  dadosQuente = req.body;
-  res.status(201).json({ message: 'Dados quente atualizados', dados: dadosQuente });
+app.get('/api/temperatura/quente', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT local, pais, temperatura, horario FROM temperatura WHERE tipo = $1', ['quente']);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Dados Quente não encontrados' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao buscar dados Quente:', error);
+    res.status(500).json({ error: 'Erro ao buscar dados Quente' });
+  }
 });
-
 app.listen(port, () => {
   console.log(`API rodando em http://localhost:5000`);
 });

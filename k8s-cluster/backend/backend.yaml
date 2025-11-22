@@ -14,5 +14,19 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: docker.io/brunosantos88/otel-app-backend:10
+        - name: backend
+          image: brunosantos88/otel-app-backend:v3.2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: db
+            - name: PGHOST
+              value: postgres-service
+            - name: PGPORT
+              value: "5432"
+          command: ["node", "app.js"]
