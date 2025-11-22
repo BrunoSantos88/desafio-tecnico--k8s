@@ -4,27 +4,28 @@ function App() {
   const [dadosFrio, setDadosFrio] = useState(null);
   const [dadosQuente, setDadosQuente] = useState(null);
 
-  const buscarFrio = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/temperatura/frio`);
-      const data = await res.json();
-      setDadosFrio(data);
-      setDadosQuente(null);
-    } catch {
-      alert('Erro ao buscar dados frio');
-    }
-  };
+const buscarFrio = async () => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/temperatura/frio`);
+    const data = await res.json();
+    setDadosFrio(data);
+    setDadosQuente(null);
+  } catch {
+    alert('Erro ao buscar dados frio');
+  }
+};
 
-  const buscarQuente = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/temperatura/quente`);
-      const data = await res.json();
-      setDadosQuente(data);
-      setDadosFrio(null);
-    } catch {
-      alert('Erro ao buscar dados quente');
-    }
-  };
+const buscarQuente = async () => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/temperatura/quente`); // fixed here
+    const data = await res.json();
+    setDadosQuente(data);
+    setDadosFrio(null);
+  } catch {
+    alert('Erro ao buscar dados quente');
+  }
+};
+
 
   return (
     <div style={{ padding: '1rem', fontFamily: 'Arial' }}>

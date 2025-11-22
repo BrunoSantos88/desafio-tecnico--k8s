@@ -5,13 +5,17 @@ const port = 5000;
 
 app.use(express.json());
 
-//Conexao com postgress
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://192.168.98.2:3000',
+}));
+
 const pool = new Pool({
-  user: "postgres",
-  host: "db",
-  database: "locahost",
-  password: "postgres",
-  port: "5432",
+  user: 'postgres',          
+  host: '127.0.0.1', 
+  database: 'db',            
+  password: 'postgres',     
+  port: 5432,
 });
 
 // METODO GET
@@ -27,7 +31,6 @@ app.get('/api/temperatura/frio', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar dados frio' });
   }
 });
-
 
 app.get('/api/temperatura/quente', async (req, res) => {
   try {
