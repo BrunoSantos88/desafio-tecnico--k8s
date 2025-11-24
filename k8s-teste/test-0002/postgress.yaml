@@ -1,0 +1,26 @@
+###
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: postgres
+  namespace: app-desafio
+  labels:
+    app.kubernetes.io/name: postgres
+spec:
+  containers:
+  - name: postgres
+    image: postgres:17
+    env:
+    - name: POSTGRES_USER
+      value: "desafio"
+    - name: POSTGRES_PASSWORD
+      value: "desafio"
+    - name: POSTGRES_DB
+      value: "db"
+##MOUNT --- VOLUME --- PONTO DE MONTAGEM/ NO CONTAINER  
+
+
+
+
+
+###  ---- VOLUME --HD VOLUME PersistentVolumeClaim

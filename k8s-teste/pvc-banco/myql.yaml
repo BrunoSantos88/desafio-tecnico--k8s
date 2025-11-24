@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-pod
+  namespace: backend
+spec:
+  nodeSelector: ## NODE ESPECIFICO
+       kubernetes.io/hostname: minikube
+  containers:
+  - name: mysql
+    image: mysql:8.0
+    resources: # limite recursos pod
+          requests:
+            memory: "10Mi" 
+            cpu: "5m"
+          limits:
+            memory: "100Mi"
+            cpu: "15m"
+    env: #configuraçoes banco de dados
+    - name: MYSQL_ROOT_PASSWORD
+      value: root
+    - name: MYSQL_DATABASE
+      value: logsdb
+    - name: MYSQL_USER
+      value: admin
+    - name: MYSQL_PASSWORD
+      value: root
+    ports:
+    - containerPort: 3306
+    volumeMounts:
+    - name: mysql-storage
+      mountPath: /var/lib/mysql
+  volumes:
+  - name: mysql-storage
+    persistentVolumeClaim:
+      claimName: mysql-pvc
+

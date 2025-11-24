@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: app-desafio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: brunosantos88/otel-app-backend:5.12
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PGUSER
+              value: 'postgres'
+            - name: PGPASSWORD
+              value: 'postgres'
+            - name: PGDATABASE
+              value: 'db'
+            - name: PGHOST
+              value: 'postgres-service.app-desafio.svc.cluster.local'
+            - name: PGPORT
+              value: "5432"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: app-desafio
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 5000          
+    targetPort: 5000 
+
