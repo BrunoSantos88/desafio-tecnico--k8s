@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: ReplicaSet
 metadata:
   name: frontend
   namespace: app-desafio
@@ -15,15 +15,9 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: brunosantos88/otel-app-frontend:v5.1
+        image: brunosantos88/otel-app-frontend:v3
         ports:
         - containerPort: 80
-        env:
-        - name: APP_BACKEND_URL      
-          value: "http://backend-service:5000"
-        - name: BACKEND_PORT
-          value: "5000"
-
 ---
 apiVersion: v1
 kind: Service

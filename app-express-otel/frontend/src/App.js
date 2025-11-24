@@ -6,7 +6,7 @@ function App() {
 
 const buscarFrio = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/api/temperatura/frio`);
+    const res = await fetch(`http://192.168.98.2:30001/api/temperatura/frio`);
     const data = await res.json();
     setDadosFrio(data);
     setDadosQuente(null);
@@ -17,7 +17,7 @@ const buscarFrio = async () => {
 
 const buscarQuente = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/api/temperatura/quente`); // fixed here
+    const res = await fetch(`http://192.168.98.2:30001/api/temperatura/quente`);
     const data = await res.json();
     setDadosQuente(data);
     setDadosFrio(null);
@@ -25,7 +25,6 @@ const buscarQuente = async () => {
     alert('Erro ao buscar dados quente');
   }
 };
-
 
   return (
     <div style={{ padding: '1rem', fontFamily: 'Arial' }}>

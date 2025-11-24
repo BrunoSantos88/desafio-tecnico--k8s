@@ -10,13 +10,12 @@ app.use(cors({
   origin: '*'
 }));
 
-//conexao com banco
 const pool = new Pool({
   user: 'postgres',
-  host: 'postgres-service.app-desafio.svc.cluster.local',
+  host: '192.168.98.2',
   database: 'db',
   password: 'postgres',
-  port: 30003,            
+  port: 5432,
 });
 
 //Teste conexao
