@@ -7,16 +7,29 @@ app.use(express.json());
 
 const cors = require('cors');
 app.use(cors({
-  origin: 'http://192.168.98.2:3000',
+  origin: '*'
 }));
 
+//conexao com banco
 const pool = new Pool({
-  user: 'postgres',          
-  host: '127.0.0.1', 
-  database: 'db',            
-  password: 'postgres',     
-  port: 5432,
+  user: 'postgres',
+  host: 'postgres-service.app-desafio.svc.cluster.local',
+  database: 'db',
+  password: 'postgres',
+  port: 30003,            
 });
+
+//Teste conexao
+async function testConnection() {
+  try {
+    const client = await pool.connect();
+    console.log('Conexão com o banco realizada com sucesso!');
+    client.release();
+  } catch (err) {
+    console.error('Erro na conexão com o banco:', err);
+  }
+}
+testConnection();
 
 // METODO GET
 app.get('/api/temperatura/frio', async (req, res) => {
@@ -31,7 +44,7 @@ app.get('/api/temperatura/frio', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar dados frio' });
   }
 });
-
+//Metodo GET
 app.get('/api/temperatura/quente', async (req, res) => {
   try {
     const result = await pool.query('SELECT local, pais, temperatura, horario FROM temperatura WHERE tipo = $1', ['quente']);
