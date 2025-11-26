@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const port = 5000;
@@ -10,13 +11,17 @@ app.use(cors({
   origin: '*'
 }));
 
+const { Pool } = require('pg');
+
 const pool = new Pool({
-  user: 'postgres',
-  host: '192.168.98.2',
-  database: 'db',
-  password: 'postgres',
-  port: 5432,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT
 });
+
+export default pool;
 
 //Teste conexao
 async function testConnection() {

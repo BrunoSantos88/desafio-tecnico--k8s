@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: app-desafio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: "postgres"
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: brunosantos88/otel-app-banco:v1
+        env: #variavel de ambiente que ainda nao funciona//
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_DB
+            value: db
+        ports:
+          - containerPort: 5434 #porta 
+        volumeMounts: # montagem de volume 
+          - name: postgres-storage
+            mountPath: /var/lib/postgresql/data
+      volumes: #volume setado.
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim

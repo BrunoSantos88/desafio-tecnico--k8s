@@ -20,15 +20,15 @@ spec:
             - containerPort: 5000
           env:
             - name: PGUSER
-              value: 'postgres'
-            - name: PGPASSWORD
-              value: 'postgres'
-            - name: PGDATABASE
-              value: 'db'
+              value: "postgres"
             - name: PGHOST
-              value: '192.168.98.2'
+              value: "192.168.98.2"
+            - name: PGDATABASE
+              value: "db"
+            - name: PGPASSWORD
+              value: "postgres"
             - name: PGPORT
-              value: "30003"
+              value: "5432"
 ---
 apiVersion: v1
 kind: Service
@@ -36,13 +36,13 @@ metadata:
   name: backend
   namespace: app-desafio
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: backend
   ports:
   - protocol: TCP
     port: 5000          
     targetPort: 5000 
-    nodePort: 30001
+    #nodePort: 30001
 
 
