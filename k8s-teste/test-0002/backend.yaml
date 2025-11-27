@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: brunosantos88/otel-app-backend:v4
+          image: brunosantos88/otel-app-backend:v8
           ports:
             - containerPort: 5000
           env:
@@ -28,7 +28,7 @@ spec:
             - name: PGPASSWORD
               value: "postgres"
             - name: PGPORT
-              value: "5432"
+              value: "30003"
 ---
 apiVersion: v1
 kind: Service
@@ -36,13 +36,13 @@ metadata:
   name: backend
   namespace: app-desafio
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: backend
   ports:
   - protocol: TCP
     port: 5000          
     targetPort: 5000 
-    #nodePort: 30001
+    nodePort: 30001
 
 

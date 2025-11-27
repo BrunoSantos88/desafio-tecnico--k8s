@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: brunosantos88/otel-app-frontend:v3
+        image: brunosantos88/otel-app-frontend:v4
         ports:
         - containerPort: 80
 ---
