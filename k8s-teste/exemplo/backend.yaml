@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: 
+        image: brunosantos88/otel-app-backend:v7
         ports:
             - name: http
               containerPort: 3000
