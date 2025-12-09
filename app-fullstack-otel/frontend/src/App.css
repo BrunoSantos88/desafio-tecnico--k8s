@@ -1,109 +1,51 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .app-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  padding: 60px 40px;
-  border-radius: 24px;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  font-family: Arial;
+}
+
+.title {
+  color: #2563eb;
   text-align: center;
-  max-width: 450px;
-  width: 90%;
-  animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 32px;
-  letter-spacing: -0.02em;
-}
-
-.status-card {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  padding: 24px 32px;
-  border-radius: 16px;
-  margin: 24px 0;
-  color: white;
-  font-weight: 600;
-  font-size: 1.1rem;
-  box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
-  transform: translateY(0);
-  transition: all 0.3s ease;
-}
-
-.status-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(240, 147, 251, 0.5);
-}
-
-.status-loading {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.status-error {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-}
-
-.message {
-  font-size: 1.2rem;
-  color: #333;
-  margin-top: 16px;
-  font-weight: 500;
-  min-height: 24px;
-}
-
-.icon {
-  font-size: 3rem;
   margin-bottom: 20px;
-  display: block;
 }
 
-.rocket {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+.api-card {
+  margin: 15px 0;
+  padding: 15px;
+  border-left: 4px solid;
 }
 
-@media (max-width: 480px) {
-  .app-container {
-    padding: 40px 24px;
-    margin: 20px;
-  }
-  
-  h1 {
-    font-size: 2rem;
-  }
+.quente { 
+  background: #fef3c7; 
+  border-left-color: #dc2626; 
 }
+
+.frio { 
+  background: #d1fae5; 
+  border-left-color: #059669; 
+}
+
+.api-title {
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.quente .api-title { color: #dc2626; }
+.frio .api-title { color: #059669; }
+
+.api-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.status {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.status.online { background: #d1fae5; color: #059669; }
+.status.offline { background: #fef3c7; color: #dc2626; }

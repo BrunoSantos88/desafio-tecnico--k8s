@@ -1,13 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const pool = require('./config/db');
 const app = express();
 
-
-app.use(cors({ origin: 'http://localhost' }));
-
-
+app.use(cors({ origin: ['*'] }));
 app.use(express.json());
-
 
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
@@ -29,25 +26,42 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ ROTAS
 app.get('/', (req, res) => {
-  console.log('   🏠 → Raiz acessada');
   res.json({ 
     status: 'Backend rodando!',
+    apis: ['/api/quente', '/api/frio'],
     connected_at: new Date().toISOString()
   });
 });
 
-app.get('/hello', (req, res) => {
-  console.log('   👋 → /hello via Nginx (React /api/hello)');
+app.get('/api/quente', async (req, res) => {
+  pool.query('INSERT INTO calor_logs(temperatura, valor, unidade, status, client_ip) VALUES($1,$2,$3,$4,$5)',
+    ['quente', 35, '°C', 'OK', req.ip]).catch(() => {});
+  
+  console.log('   🔥 → /api/quente');
   res.json({ 
-    message: '🚀 Backend OK!',
-    from: req.ip
+    temperatura: 'quente',
+    valor: 35,
+    unidade: '°C',
+    status: 'OK'
   });
 });
 
-const PORT = 5000;
+app.get('/api/frio', async (req, res) => {
+  pool.query('INSERT INTO calor_logs(temperatura, valor, unidade, status, client_ip) VALUES($1,$2,$3,$4,$5)',
+    ['frio', 12, '°C', 'OK', req.ip]).catch(() => {});
+  
+  console.log('   ❄️ → /api/frio');
+  res.json({
+    temperatura: 'frio',
+    valor: 12,
+    unidade: '°C',
+    status: 'OK'
+  });
+});
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🚀 Backend escutando conexões em http://0.0.0.0:5000`);
-  console.log(`📡 Aguardando conexões...\n`);
+  console.log(`\n🚀 Backend ☸️ http://0.0.0.0:5000}`);
+  console.log(`📡 Docker-ready!\n`);
 });
