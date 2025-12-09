@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: brunosantos88/otel-app-banco:v1
+        image: brunosantos88/otel-app-banco:v6
         env:
           - name: POSTGRES_USER
             value: postgres
@@ -25,11 +25,25 @@ spec:
           - name: POSTGRES_DB
             value: db
         ports:
-          - containerPort: 5434 #porta 
+          - containerPort: 5434 
         volumeMounts: # montagem de volume 
           - name: postgres-storage
             mountPath: /var/lib/postgresql/data
       volumes: #volume setado.
         - name: postgres-storage
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: app-desafio
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+    name: postgres
+  clusterIP: None

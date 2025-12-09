@@ -17,10 +17,3 @@ spec:
       value: "desafio"
     - name: POSTGRES_DB
       value: "db"
-##MOUNT --- VOLUME --- PONTO DE MONTAGEM/ NO CONTAINER  
-
-
-
-
-
-###  ---- VOLUME --HD VOLUME PersistentVolumeClaim
