@@ -1,58 +1,55 @@
 const express = require('express');
 const cors = require('cors');
 const logger = require('./logger');
+const pool = require('./config/database');
+const { initTemperaturas } = require('./init-db');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const temperaturas = [
-  {
-    id: 1,
-    local: 'Oymyakon',
-    pais: 'Rússia',
-    temperatura: -67.7,
-    horario: '2025-12-07 20:00',
-    tipo: 'frio'
-  },
-  {
-    id: 2,
-    local: 'Death Valley',
-    pais: 'EUA',
-    temperatura: 56.7,
-    horario: '2025-12-07 20:00',
-    tipo: 'quente'
-  }
-];
-
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(logger); 
+app.use(logger);
 
-console.log('✅ 2 temperaturas carregadas:', temperaturas.length);
+// Inicializa DB na startup
+initTemperaturas();
+
+console.log('✅ Iniciando backend com PostgreSQL...');
 
 // Health check
-app.get('/', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    records: temperaturas.length,
-    endpoints: ['/api/frio', '/api/quente']
-  });
+app.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM temperaturas');
+    res.json({
+      status: 'OK',
+      records: parseInt(result.rows[0].count),
+      endpoints: ['/api/frio', '/api/quente']
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'DB indisponível' });
+  }
 });
 
-// FRIO - ÚNICO registro frio
-app.get('/api/frio', (req, res) => {
-  const frio = temperaturas.find(t => t.tipo === 'frio');
-  res.json(frio);
+// FRIO
+app.get('/api/frio', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM temperaturas WHERE tipo = 'frio'");
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// QUENTE - ÚNICO registro quente
-app.get('/api/quente', (req, res) => {
-  const quente = temperaturas.find(t => t.tipo === 'quente');
-  res.json(quente);
+// QUENTE
+app.get('/api/quente', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM temperaturas WHERE tipo = 'quente'");
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`🚀 Backend 2 Temps: http://0.0.0.0:5000`);
-  console.log(`🥶 ${temperaturas[0].local}: ${temperaturas[0].temperatura}°C`);
-  console.log(`🔥 ${temperaturas[1].local}: ${temperaturas[1].temperatura}°C`);
+  console.log(`🚀 Backend Temps PostgreSQL: http://0.0.0.0:${port}`);
 });
