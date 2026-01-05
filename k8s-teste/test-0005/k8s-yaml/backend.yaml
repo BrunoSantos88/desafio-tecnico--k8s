@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-temps
+  namespace: app-desafio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-temps
+  template:
+    metadata:
+      labels:
+        app: backend-temps
+    spec:
+      containers:
+        - name: backend
+          image: brunosantos88/otel-app-backend:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_NAME
+              value: temperaturas
+            - name: DB_USER
+              value: admin
+            - name: DB_PASSWORD
+              value: admin123
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: app-desafio
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-temps
+  ports:
+    - port: 5000
+      targetPort: 5000

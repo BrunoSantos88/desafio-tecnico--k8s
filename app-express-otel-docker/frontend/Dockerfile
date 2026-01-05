@@ -6,9 +6,9 @@ COPY ./src ./src
 COPY ./public ./public
 RUN npm run build
 
+# Dockerfile do frontend
 FROM nginx:alpine
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY ./build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
